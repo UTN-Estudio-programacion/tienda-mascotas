@@ -1,58 +1,126 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Tienda Mascotas
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema de gestión de mascotas y tienda online desarrollado con Laravel para la cátedra de **Programación III** de la UTN.
 
-## About Laravel
+## Stack Tecnológico
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **Framework:** Laravel 13.x (v13.17.0)
+- **PHP:** ^8.3
+- **Base de datos:** SQLite (por defecto) / MySQL
+- **Frontend:** CSS personalizado, Font Awesome 6.5
+- **Paginación:** Tailwind CSS (vista personalizada)
+- **API:** RESTful con rutas tipo `apiResource`
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Funcionalidades
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Módulo Mascotas (Web)
+- Listado paginado de mascotas (15 por página) con ordenamiento por ID
+- Buscador por nombre con filtro `LIKE`
+- Formulario de registro de nuevas mascotas (nombre, especie, edad)
+- Diseño responsive con header, tabla y paginación estilizada
 
-## Learning Laravel
+### Módulo Tienda (API REST)
+- CRUD completo de **Artículos** (con relación a categorías)
+- CRUD completo de **Categorías**
+- CRUD completo de **Clientes** (con email, teléfono y DNI)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Estructura del Proyecto
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── Api/
+│   │   │   ├── ArticuloController.php
+│   │   │   ├── CategoriaController.php
+│   │   │   └── ClienteController.php
+│   │   └── PetController.php
+│   └── Models/
+│       ├── Articulo.php
+│       ├── Categoria.php
+│       ├── Cliente.php
+│       └── Pet.php
+├── database/
+│   ├── factories/          # PetFactory, ArticuloFactory, etc.
+│   ├── migrations/         # Migraciones de todas las tablas
+│   └── seeders/            # DatabaseSeeder con datos de prueba
+├── resources/views/
+│   ├── layouts/app.blade.php
+│   ├── pets/
+│   │   ├── index.blade.php
+│   │   └── create.blade.php
+│   └── vendor/pagination/  # Vista personalizada de paginación
+├── routes/
+│   ├── web.php             # Rutas del módulo Mascotas
+│   └── api.php             # Rutas del módulo Tienda (API)
+└── public/css/style.css    # Estilos de la aplicación
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+## Instalación y Uso Local
 
-## Contributing
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/UTN-Estudio-programacion/tienda-mascotas.git
+cd tienda-mascotas
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+# 2. Instalar dependencias
+composer install
 
-## Code of Conduct
+# 3. Configurar el entorno
+cp .env.example .env
+# Editar .env si se desea cambiar la base de datos (por defecto SQLite)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# 4. Generar clave de aplicación
+php artisan key:generate
 
-## Security Vulnerabilities
+# 5. Ejecutar migraciones y seeders (carga datos de prueba)
+php artisan migrate --seed
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+# 6. Iniciar servidor de desarrollo
+php artisan serve
+```
 
-## License
+Luego abrir `http://localhost:8000` en el navegador.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Endpoints Disponibles
+
+### Web (navegador)
+
+| Ruta | Método | Descripción |
+|------|--------|-------------|
+| `/` | GET | Redirige a `/mascotas` |
+| `/mascotas` | GET | Listado paginado de mascotas (acepta `?search=`) |
+| `/mascotas/crear` | GET | Formulario de registro |
+| `/mascotas` | POST | Guarda una nueva mascota |
+
+### API REST
+
+| Endpoint | Métodos | Descripción |
+|----------|---------|-------------|
+| `/api/articulos` | GET, POST | Listar / Crear artículos |
+| `/api/articulos/{id}` | GET, PUT, DELETE | Ver / Actualizar / Eliminar artículo |
+| `/api/categorias` | GET, POST | Listar / Crear categorías |
+| `/api/categorias/{id}` | GET, PUT, DELETE | Ver / Actualizar / Eliminar categoría |
+| `/api/clientes` | GET, POST | Listar / Crear clientes |
+| `/api/clientes/{id}` | GET, PUT, DELETE | Ver / Actualizar / Eliminar cliente |
+
+Ejemplo de uso con `curl`:
+
+```bash
+curl http://localhost:8000/api/articulos
+curl -X POST http://localhost:8000/api/clientes \
+  -H "Content-Type: application/json" \
+  -d '{"nombre":"Juan Pérez","email":"juan@example.com","telefono":"123456789"}'
+```
+
+## Datos de Prueba
+
+Al ejecutar `php artisan migrate --seed` se cargan automáticamente:
+
+- **500 mascotas** con nombres y especies aleatorias (Perro, Gato, Loro, Hámster, Conejo)
+- **10 categorías** de artículos
+- **30 artículos** asociados a categorías
+- **20 clientes** con datos de contacto
+
+## Créditos
+
+Proyecto desarrollado por [Mauricio-bb](https://github.com/Mauricio-bb) para la cátedra de Programación III - UTN.
